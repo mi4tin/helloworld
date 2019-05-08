@@ -9,8 +9,8 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/apache/servicecomb-service-center/server/core/proto"
-	"github.com/chinx/helloworld/rest/common/config"
-	"github.com/chinx/helloworld/rest/common/restful"
+	"github.com/ChinX/helloworld/rest/common/config"
+	"github.com/ChinX/helloworld/rest/common/restful"
 )
 
 var (
@@ -166,7 +166,8 @@ func (c *Client) Discovery(conID string, svc *config.ServiceConf) ([]*proto.Micr
 	reqURL := c.rawURL + discovery + "?" + val.Encode()
 	req, err := restful.NewRequest(http.MethodGet, reqURL, c.DefaultHeaders(), nil)
 	if err == nil {
-		req.Header.Set("x-consumerid", conID)
+		//req.Header.Set("x-consumerid", conID)
+		log.Println("no consumerid")
 		respData := &proto.GetInstancesResponse{}
 		err = restful.DoRequest(req, respData)
 		if err == nil {

@@ -10,14 +10,15 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/chinx/helloworld/rest/common/config"
-	"github.com/chinx/helloworld/rest/common/servicecenter/v3"
+	"github.com/ChinX/helloworld/rest/common/config"
+	"github.com/ChinX/helloworld/rest/common/servicecenter/v3"
 )
 
 var (
 	HeartbeatInterval = 30 * time.Second
 	serviceID         string
 	instanceID        string
+	instanceID1        string
 )
 
 func main() {
@@ -88,6 +89,14 @@ func registerAndHeartbeat(ctx context.Context) {
 	}
 
 	instanceID = insID
+
+	// 再注册个注册微服务实例
+	insID, err = cli.RegisterInstance(svcID, config.Instance)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	instanceID1 = insID
 
 	// 启动定时器：间隔30s
 	tk := time.NewTicker(HeartbeatInterval)

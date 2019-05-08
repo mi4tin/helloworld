@@ -9,8 +9,8 @@ import (
 	"sync"
 
 	"github.com/apache/servicecomb-service-center/server/core/proto"
-	"github.com/chinx/helloworld/rest/common/config"
-	"github.com/chinx/helloworld/rest/common/servicecenter/v3"
+	"github.com/ChinX/helloworld/rest/common/config"
+	"github.com/ChinX/helloworld/rest/common/servicecenter/v3"
 )
 
 var caches = &sync.Map{}
@@ -155,6 +155,9 @@ func sayHello() string {
 	if err != nil {
 		return err.Error()
 	}
+
+	log.Println("addr:",addr)
+
 	req, err := http.NewRequest(http.MethodGet, addr+"/hello", nil)
 	if err != nil {
 		return fmt.Sprintf("create request faild: %s", err)

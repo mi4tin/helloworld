@@ -1,4 +1,4 @@
-module github.com/chinx/helloworld
+module github.com/ChinX/helloworld
 
 require (
 	github.com/BurntSushi/toml v0.3.1 // indirect
