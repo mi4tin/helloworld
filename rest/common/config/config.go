@@ -13,6 +13,8 @@ import (
 var (
 	Service  *ServiceConf
 	Instance *InstanceConf
+	Instance1 *InstanceConf
+
 	Registry *RegistryConf
 	Provider *ServiceConf
 	Tenant   *TenantConf
@@ -22,6 +24,9 @@ var (
 type MicroService struct {
 	Service  *ServiceConf  `yaml:"service"`
 	Instance *InstanceConf `yaml:"instance"`
+
+	Instance1 *InstanceConf `yaml:"instance1"`
+
 	Registry *RegistryConf `yaml:"registry"`
 	Provider *ServiceConf  `yaml:"provider"`
 	Tenant   *TenantConf   `yaml:"tenant"`
@@ -98,6 +103,7 @@ func LoadConfig(filePath string) error {
 
 	Service = conf.Service
 	Instance = conf.Instance
+	Instance1 = conf.Instance1
 	Registry = conf.Registry
 	Provider = conf.Provider
 	Tenant = conf.Tenant

@@ -65,6 +65,13 @@ func run(ctx context.Context) {
 		w.Write([]byte("hello world"))
 	})
 	err = http.ListenAndServe(config.Instance.ListenAddress, nil)
+
+	http.HandleFunc("/hello", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("hello world"))
+	})
+	err = http.ListenAndServe(config.Instance1.ListenAddress, nil)
+
 	log.Println(err)
 }
 
@@ -90,8 +97,34 @@ func registerAndHeartbeat(ctx context.Context) {
 
 	instanceID = insID
 
+
+	go func() {
+		// 启动定时器：间隔30s
+		tk := time.NewTicker( 30 * time.Second)
+		for {
+			select {
+			case <-tk.C:
+				// 定时发送心跳
+				err := cli.Heartbeat(svcID, instanceID)
+				if err != nil {
+					log.Println(err)
+					tk.Stop()
+					return
+				}
+				log.Println("send heartbeat success",instanceID)
+				// 监听程序退出
+			case <-ctx.Done():
+				tk.Stop()
+				log.Println("service is done")
+				return
+			}
+		}
+	}()
+
+
+	log.Println("再注册个注册微服务实例")
 	// 再注册个注册微服务实例
-	insID, err = cli.RegisterInstance(svcID, config.Instance)
+	insID, err = cli.RegisterInstance(svcID, config.Instance1)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -99,23 +132,24 @@ func registerAndHeartbeat(ctx context.Context) {
 	instanceID1 = insID
 
 	// 启动定时器：间隔30s
-	tk := time.NewTicker(HeartbeatInterval)
+	tk1 := time.NewTicker( 30 * time.Second)
 	for {
 		select {
-		case <-tk.C:
+		case <-tk1.C:
 			// 定时发送心跳
-			err := cli.Heartbeat(svcID, insID)
+			err := cli.Heartbeat(svcID, instanceID1)
 			if err != nil {
 				log.Println(err)
-				tk.Stop()
+				tk1.Stop()
 				return
 			}
-			log.Println("send heartbeat success")
-		// 监听程序退出
+			log.Println("send heartbeat success1.",instanceID1)
+			// 监听程序退出
 		case <-ctx.Done():
-			tk.Stop()
-			log.Println("service is done")
+			tk1.Stop()
+			log.Println("service is done1")
 			return
 		}
 	}
+
 }
